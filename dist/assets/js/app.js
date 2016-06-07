@@ -19760,6 +19760,10 @@ var _ScoreBox = require('./quiz/ScoreBox.jsx');
 
 var _ScoreBox2 = _interopRequireDefault(_ScoreBox);
 
+var _Results = require('./quiz/Results.jsx');
+
+var _Results2 = _interopRequireDefault(_Results);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19856,7 +19860,7 @@ var App = function (_Component) {
             return _react2.default.createElement(
                 'div',
                 null,
-                this.state.current > this.state.questions.length ? null : _react2.default.createElement(_ScoreBox2.default, this.state),
+                this.state.current > this.state.questions.length ? _react2.default.createElement(_Results2.default, this.state) : _react2.default.createElement(_ScoreBox2.default, this.state),
                 _react2.default.createElement(_QuestionList2.default, _extends({}, this.state, { setCurrent: this._setCurrent.bind(this), setScore: this._setScore.bind(this) }))
             );
         }
@@ -19867,7 +19871,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"./quiz/QuestionList.jsx":170,"./quiz/ScoreBox.jsx":171,"react":167}],169:[function(require,module,exports){
+},{"./quiz/QuestionList.jsx":170,"./quiz/Results.jsx":171,"./quiz/ScoreBox.jsx":172,"react":167}],169:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19987,6 +19991,57 @@ var QuestionList = function QuestionList(props) {
 exports.default = QuestionList;
 
 },{"./Question.jsx":169,"react":167}],171:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Results = function Results(props) {
+    var percent = props.score / props.questions.length * 100;
+    if (percent > 80) {
+        var message = 'Awesome Job!';
+    } else if (percent < 80 && percent > 60) {
+        var message = 'You Did Ok!';
+    } else {
+        var message = 'You Did Horrible!';
+    }
+    return _react2.default.createElement(
+        'div',
+        { className: 'well' },
+        _react2.default.createElement(
+            'h4',
+            null,
+            'You Got ',
+            props.score,
+            ' out of ',
+            props.questions.length,
+            ' Correct.'
+        ),
+        _react2.default.createElement(
+            'h1',
+            null,
+            percent,
+            '% - ',
+            message
+        ),
+        _react2.default.createElement(
+            'a',
+            { href: '/' },
+            'Take Again'
+        )
+    );
+};
+
+exports.default = Results;
+
+},{"react":167}],172:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20023,7 +20078,7 @@ var ScoreBox = function ScoreBox(props) {
 
 exports.default = ScoreBox;
 
-},{"react":167}],172:[function(require,module,exports){
+},{"react":167}],173:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -20040,7 +20095,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (0, _reactDom.render)(_react2.default.createElement(_App2.default, null), document.getElementById('app'));
 
-},{"./components/App.jsx":168,"react":167,"react-dom":2}]},{},[172])
+},{"./components/App.jsx":168,"react":167,"react-dom":2}]},{},[173])
 
 
 //# sourceMappingURL=sourceMap/app.js.map

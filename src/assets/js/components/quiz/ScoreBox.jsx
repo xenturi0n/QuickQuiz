@@ -10,4 +10,4 @@ const ScoreBox = (props) => {
 }
 
 
-export default ScoreBox;
+export default ScoreBox; 
