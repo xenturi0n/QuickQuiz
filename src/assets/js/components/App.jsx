@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import QuestionList from './quiz/QuestionList.jsx';
-
+import ScoreBox from './quiz/ScoreBox.jsx';
 
 class App extends Component{
     constructor(props){
@@ -89,8 +89,22 @@ class App extends Component{
             current: 1
         }
     }
+    
+    _setCurrent(current){
+        this.setState({current: current});
+    }
+    
+    _setScore(score){
+        this.setState({score: score});
+    }
+    
     render(){
-        return(<QuestionList {...this.state}/>);
+        return(
+            <div>
+                {this.state.current > this.state.questions.length ? null : <ScoreBox {...this.state}/>}
+                <QuestionList {...this.state} setCurrent={this._setCurrent.bind(this)} setScore={this._setScore.bind(this)}/>
+            </div>
+        );
     }
 }
 

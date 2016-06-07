@@ -19744,6 +19744,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -19753,6 +19755,10 @@ var _react2 = _interopRequireDefault(_react);
 var _QuestionList = require('./quiz/QuestionList.jsx');
 
 var _QuestionList2 = _interopRequireDefault(_QuestionList);
+
+var _ScoreBox = require('./quiz/ScoreBox.jsx');
+
+var _ScoreBox2 = _interopRequireDefault(_ScoreBox);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19835,9 +19841,24 @@ var App = function (_Component) {
     }
 
     _createClass(App, [{
+        key: '_setCurrent',
+        value: function _setCurrent(current) {
+            this.setState({ current: current });
+        }
+    }, {
+        key: '_setScore',
+        value: function _setScore(score) {
+            this.setState({ score: score });
+        }
+    }, {
         key: 'render',
         value: function render() {
-            return _react2.default.createElement(_QuestionList2.default, this.state);
+            return _react2.default.createElement(
+                'div',
+                null,
+                this.state.current > this.state.questions.length ? null : _react2.default.createElement(_ScoreBox2.default, this.state),
+                _react2.default.createElement(_QuestionList2.default, _extends({}, this.state, { setCurrent: this._setCurrent.bind(this), setScore: this._setScore.bind(this) }))
+            );
         }
     }]);
 
@@ -19846,7 +19867,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"./quiz/QuestionList.jsx":170,"react":167}],169:[function(require,module,exports){
+},{"./quiz/QuestionList.jsx":170,"./quiz/ScoreBox.jsx":171,"react":167}],169:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19859,20 +19880,34 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function handleOnChange(e) {
-    console.log(">>>>>> Change");
+function handleOnChange(e, props) {
+    e.preventDefault();
+    var setCurrent = props.setCurrent;
+    var setScore = props.setScore;
+    var question = props.question;
+    var score = props.score;
+    var current = props.current;
+
+    var selected = e.target.value;
+
+    console.log(selected, question.correct);
+    if (selected == question.correct) {
+        setScore(score + 1);
+    }
+
+    setCurrent(current + 1);
 }
 
-function renderChoices(choices, id) {
-    var _this = this;
-
+function renderChoices(choices, id, props) {
     return choices.map(function (choice, index) {
         return _react2.default.createElement(
             "li",
             { className: "list-group-item", key: index },
             choice.id,
             " ",
-            _react2.default.createElement("input", { type: "radio", onChange: handleOnChange.bind(_this), name: id, value: id }),
+            _react2.default.createElement("input", { type: "radio", onChange: function onChange(e) {
+                    handleOnChange(e, props);
+                }, name: id, value: choice.id }),
             " ",
             choice.text
         );
@@ -19895,7 +19930,7 @@ var Question = function Question(props) {
         _react2.default.createElement(
             "ul",
             { className: "list-group" },
-            renderChoices(question.choices, question.id)
+            renderChoices(question.choices, question.id, props)
         )
     );
 };
@@ -19909,6 +19944,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -19919,34 +19956,74 @@ var _Question2 = _interopRequireDefault(_Question);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function renderQuestions(questions) {
+function renderQuestions(questions, current, props) {
     return questions.map(function (question) {
-        return _react2.default.createElement(
-            'div',
-            { className: 'row', key: question.id },
-            _react2.default.createElement(
+        if (question.id == current) {
+            return _react2.default.createElement(
                 'div',
-                { className: 'col-xs-12' },
-                _react2.default.createElement(_Question2.default, { question: question })
-            )
-        );
+                { className: 'row', key: question.id },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'col-xs-12' },
+                    _react2.default.createElement(_Question2.default, _extends({ question: question }, props))
+                )
+            );
+        }
     });
 }
 
 var QuestionList = function QuestionList(props) {
     var questions = props.questions;
+    var current = props.current;
 
 
     return _react2.default.createElement(
         'div',
         { className: 'questions' },
-        renderQuestions(questions)
+        renderQuestions(questions, current, props)
     );
 };
 
 exports.default = QuestionList;
 
 },{"./Question.jsx":169,"react":167}],171:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ScoreBox = function ScoreBox(props) {
+    return _react2.default.createElement(
+        "div",
+        { className: "well" },
+        "Question ",
+        props.current,
+        " out of ",
+        props.questions.length,
+        " ",
+        _react2.default.createElement(
+            "div",
+            { className: "pull-right" },
+            _react2.default.createElement(
+                "strong",
+                null,
+                "Score: ",
+                props.score
+            )
+        )
+    );
+};
+
+exports.default = ScoreBox;
+
+},{"react":167}],172:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -19963,7 +20040,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (0, _reactDom.render)(_react2.default.createElement(_App2.default, null), document.getElementById('app'));
 
-},{"./components/App.jsx":168,"react":167,"react-dom":2}]},{},[171])
+},{"./components/App.jsx":168,"react":167,"react-dom":2}]},{},[172])
 
 
 //# sourceMappingURL=sourceMap/app.js.map
